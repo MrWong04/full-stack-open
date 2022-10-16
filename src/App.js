@@ -1,64 +1,52 @@
 import { useState } from 'react'
 
-const Hello = ({name,age}) => {
-  const bornYear = () => new Date().getFullYear() - age
+const History = ({allclicks}) => {
+  if(allclicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
+  }
   return (
     <div>
-      <p>
-        Hello {name}, you are {age} years old
-      </p>
-      <p>So you were probably born in {bornYear()}</p>
+      button press History: {allclicks.join(' ')}
     </div>
   )
 }
 
-const Display = ({counter}) => {
-  return (
-    <div>{counter}</div>
-  )
-}
-const Button = ({text,onClick}) => {
-  return (
-    <button onClick={onClick}>
+const Button = ({handleClick, text}) => (
+  <>
+    <span>{text}</span>
+    <button onClick = {handleClick}>
       {text}
     </button>
-  )
-}
+  </>
+
+)
 
 const App = () => {
-  const [ counter, setCounter ] = useState(0)
-  const name = 'Peter'
-  const age = 10
+  const [clicks, setClicks] = useState({left: 0, right: 0})
+  const [allclicks, setAll] = useState([])
 
-  const increaseByOne = () => {
-    setCounter(counter + 1)
+  const handleLeftClick = () => {
+    setAll(allclicks.concat('L'))
+    setClicks({...clicks,left: clicks.left + 1})
   }
-  const decreaseByOne = () => {
-    setCounter(counter - 1)
+    
+
+  const handleRightClick = () => {
+    setAll(allclicks.concat('R'))
+    setClicks({...clicks,right: clicks.right + 1})
   }
-  const setToZero = () => {
-    setCounter(0)
-  }
-  console.log('rendering...', counter)
+  console.log(allclicks)
   return (
     <div>
-      <h1>Greetings</h1>
-      <Hello name="Maya" age={26 + 10} />
-      <Hello name={name} age={age} />
-      <Display counter={counter}></Display>
-      <Button 
-        text='plus'
-        onClick={increaseByOne}
-      />
-      <Button 
-        onClick={decreaseByOne}
-        text='minus'
-      />
-      <Button 
-        onClick={setToZero}
-        text='zero'
-      />
+      <Button text="left" handleClick={handleLeftClick} />
+      <Button text="right" handleClick={handleRightClick} />
+      <History allclicks={allclicks}></History>
     </div>
   )
 }
+
 export default App;
